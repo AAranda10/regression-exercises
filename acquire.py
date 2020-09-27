@@ -25,10 +25,10 @@ def new_mall_data():
     '''
     sql_query = 'SELECT * FROM customers'
     df = pd.read_sql(sql_query, get_connection('mall_customers'))
-    df.to_csv('mall_customers__df.csv')
+    df.to_csv('mall_customers_df.csv')
     return df
 
-df get_mall_data(cached=False):
+def get_mall_data(cached=False):
     if cached or os.path.isfile('mall_customers_df.csv') == False:
         df = new_mall_data()
     else:
@@ -91,4 +91,13 @@ def get_iris_data(cached=False):
     else:
         df = pd.read_csv('iris_df.csv', index_col=0)
     return df
+
+##################### Acquire Telco Data ########################
+
+def get_telco_data():
+    sql_query = """SELECT customer_id, monthly_charges, tenure, total_charges FROM customers WHERE contract_type_id = 3"""
+    df = pd.read_sql(sql_query, get_connection('telco_churn'))
+    df.to_csv('telco_churn.csv')
+    return df
+
 
