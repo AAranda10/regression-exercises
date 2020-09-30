@@ -18,7 +18,7 @@ def get_db_url(db_name):
     return f"mysql+pymysql://{user}:{password}@{host}/{db_name}"
 
 
-def get_data_from_sql():
+def get_telco_data():
     query = """
     SELECT customer_id, monthly_charges, tenure, total_charges
     FROM customers
@@ -63,7 +63,7 @@ def wrangle_telco():
     Returns a clean df with four columns:
     customer_id(object), monthly_charges(float), tenure(int), total_charges(float)
     """
-    df = get_data_from_sql()
+    df = get_telco_data()
     df.tenure.replace(0, 1, inplace=True)
     df.total_charges = df.total_charges.replace(" ", np.nan)
     df.total_charges = df.total_charges.fillna(df.monthly_charges)
@@ -80,5 +80,13 @@ def wrangle_grades():
     grades.drop(columns="student_id", inplace=True)
     grades.replace(r"^\s*$", np.nan, regex=True, inplace=True)
     df = grades.dropna().astype("int")
+    return df
+
+def get_mall_data():
+    query = """
+    SELECT *
+    FROM customers;
+    """
+    df = pd.read_sql(query, get_db_url("mall_customers"))
     return df
 
